@@ -1,5 +1,8 @@
 const { response } = require('express');
+const bcryptjs = require('bcryptjs');
 
+// Instancias de mi modelo, por eso empezar con mayusculas
+const Usuario = require('../models/usuario');
 
 const usuariosGet =  (req = request, res = response) => {
 
@@ -13,14 +16,28 @@ const usuariosGet =  (req = request, res = response) => {
     });
 }
 
-const usuariosPost =  (req, res = response) => {
+const usuariosPost = async (req, res = response) => {
 
-    const { nombre, edad } = req.body;
+    const { nombre, correo, password, rol } = req.body; // { google, ...resto }
+    const usuario = new Usuario({ nombre, correo, password, rol });
+    
+    // Verificar si el correo existe
+    const existeEmail = await Usuario.findOne({ correo });
+    if( existeEmail ){
+        return res.status(400).json({ 
+            msg: 'Correo ya está registrado'
+        })
+    }
 
-    res.status(200).json({
-        msg: 'post API - fase controlador',
-        nombre,
-        edad
+    // Encriptar la contraseña
+    const salt = bcryptjs.genSaltSync();
+    usuario.password = bcryptjs.hashSync( password, salt );
+
+    // Guardar en BD
+    await usuario.save(); // Guarda el usuario creado
+
+    res.json({
+        usuario
     })
 }
 
