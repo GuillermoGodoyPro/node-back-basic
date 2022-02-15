@@ -18,6 +18,7 @@ const usuariosGet =  (req = request, res = response) => {
 
 const usuariosPost = async (req, res = response) => {
 
+   
     const { nombre, correo, password, rol } = req.body; // { google, ...resto }
     const usuario = new Usuario({ nombre, correo, password, rol });
     

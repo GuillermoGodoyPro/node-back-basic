@@ -1,5 +1,11 @@
 
 const { Router } = require('express');
+const { check } = require('express-validator');
+const Role = require('../models/role')
+
+const {validarCampos} = require('../middlewares/validar-campos');
+const { esRoleValido } = require('../helpers/db-validators');
+ 
 const { 
     usuariosGet,
     usuariosPut,
@@ -14,7 +20,19 @@ const router = Router();
 
 router.get('/', usuariosGet)
 
-router.post('/', usuariosPost)
+router.post('/',[
+    check( 'nombre', 'Nombre no permitido - minimo 3 caracteres ').trim().isLength({ min: 3 }).not().isEmpty(),
+    check( 'password', 'minimo 6 caracteres ').trim().isLength({ min: 6 }).not().isEmpty(),
+    check( 'correo', 'El correo no es válido').isEmail(),
+    //check( 'rol', 'No es un rol válido').isIn(['ADMIN_ROLE','USER_ROLE']),
+    check('rol').custom( async(rol = '') => {
+        const existeRol = await Role.findOne({ rol });
+        if( !existeRol ){
+            throw new Error( `El rol ${ rol } no está registrado en la BD`)
+        }
+    } ),
+    validarCampos
+],usuariosPost)
 
 router.put('/:id', usuariosPut)
 
