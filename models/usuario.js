@@ -32,6 +32,7 @@ const UsuarioSchema = Schema({
         default: false
     }
 });
+//prueba
 
 UsuarioSchema.methods.toJSON = function(){
     const {__v, password, ...usuario } = this.toObject();
