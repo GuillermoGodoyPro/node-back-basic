@@ -33,4 +33,11 @@ const UsuarioSchema = Schema({
     }
 });
 
+
+// Funcion que se ejecuta cuando se crea el usuario, osea cuando se manda a llamar 
+UsuarioSchema.methods.toJSON = function() {
+    const { __v, password, ...usuario } = this.toObject();
+    return usuario;
+}
+
 module.exports = model( 'Usuario', UsuarioSchema);
