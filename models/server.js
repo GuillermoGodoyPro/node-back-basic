@@ -19,8 +19,7 @@ class Server {
         
         // Rutas de mi app
         this.routes();
-
-        
+         
     }
   
     async conectarDB() {
@@ -30,7 +29,7 @@ class Server {
     // Directorio público
     middlewares() {
 
-        // CORS
+        // CORS herramienta para configurar algunos accesos, ej whitelist o blacklist
         this.app.use( cors() );
 
         // Lectura y parseo del body
