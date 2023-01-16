@@ -1,5 +1,6 @@
 
-const { Schema , model } = require('mongoose')
+const { Schema , model } = require('mongoose');
+
 
 const UsuarioSchema = Schema({
     nombre: {
@@ -10,7 +11,7 @@ const UsuarioSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio'],
         unique: true
-    },
+    },   
     password: {
         type: String,
         required: [true, 'La contraseña es obligatoria']
@@ -36,7 +37,8 @@ const UsuarioSchema = Schema({
 
 // Funcion que se ejecuta cuando se crea el usuario, osea cuando se manda a llamar 
 UsuarioSchema.methods.toJSON = function() {
-    const { __v, password, ...usuario } = this.toObject();
+    const { __v, password, _id, ...usuario } = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 
